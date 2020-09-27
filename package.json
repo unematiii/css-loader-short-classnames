@@ -8,10 +8,12 @@
     "index.js",
     "index.d.ts"
   ],
+  "types": "index.d.ts",
   "scripts": {
     "build": "npx tsc",
     "build:clean": "run-s clean build",
     "clean": "rimraf index.js index.d.ts",
+    "prepublish": "run-s build:clean",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
