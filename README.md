@@ -4,7 +4,7 @@
 ## Description
 Save some extra bytes on your final bundle by shortening class names from something like `[local]-[hash:base64:8]` down to `a` ... `z` ... `A` ... `Z` ... `aA` ... `ZZ` etc.
 
-This package provides class names generator factory with default alphabet `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`. Produced generator function always starts out with single letter character from the beginning of the alphabet and keeps increasing it while at the same time guaranteeing the uniqueness of the class names.
+This package provides class name generator factory with default alphabet `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`. Produced generator function always starts out with single letter character from the beginning of the alphabet and keeps increasing it while at the same time guaranteeing the uniqueness of the class names.
 
 ## Install
 
@@ -64,7 +64,7 @@ const { getLocalIdentName } = require('css-loader-shorter-classnames');
 const getLocalIdent = getLocalIdentName('abc');
 ```
 
-## Useage with Vue CLI generated projects
+## Usage with Vue CLI generated projects
 
 `vue.config.js`:
 
