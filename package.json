@@ -1,6 +1,6 @@
 {
   "name": "css-loader-shorter-classnames",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Provides short class name generator for css-loader with CSS Modules enabled",
   "main": "index.js",
   "files": [
@@ -22,9 +22,10 @@
   },
   "keywords": [
     "css",
-    "CSSModules",
     "css-loader",
-    "mini-css-extract-plugin"
+    "css-modules",
+    "mini-css-extract-plugin",
+    "vue-cli"
   ],
   "author": "Mati Kärner",
   "license": "Apache-2.0",
