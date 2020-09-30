@@ -15,7 +15,7 @@ npm i css-loader-shorter-classnames -D
 
 ## Basic usage
 
-```
+```js
 // Import class name generator factory
 const { getLocalIdentName } = require('css-loader-shorter-classnames');
 
@@ -35,7 +35,7 @@ const getLocalIdent = getLocalIdentName();
 ```
 
 ## Enable only for production
-```
+```js
 const { getLocalIdentName } = require('css-loader-shorter-classnames');
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -56,13 +56,9 @@ const isProduction = process.env.NODE_ENV === 'production';
 ## Custom alphabet, prefix and suffix
 Optionally supply a custom alphabet and/or prefix and/or suffix.
 
-```
-const generator = (alphabet? = defaultAlphabet, prefix?: string, suffix?: string) => string;
-```
-
 NB! Watch out for spaces and other invalid characters. If alphabet contains numbers, class names that would otherwise start with a number, will be automatically prefixed with `_` (eg `0` --> `_0`)). That is, unless you supply a prefix that doesn't start with a number yourself.
 
-```
+```js
 const { classNamesAlphabet, getLocalIdentName } = require('css-loader-shorter-classnames');
 
 // Produces: 'a', 'b', 'c', 'aa', 'ab', ... 'abcabca' etc.
@@ -85,7 +81,7 @@ const getLocalIdent = getLocalIdentName(classNamesAlphabet, '_', '_');
 
 `vue.config.js`:
 
-```
+```js
 const { getLocalIdentName } = require('css-loader-shorter-classnames');
 
 const isProduction = process.env.NODE_ENV === 'production';
