@@ -34,6 +34,24 @@ const getLocalIdent = getLocalIdentName();
 },
 ```
 
+For `css-loader` versions below `3.*`, `modules` options should be specified in loader `options` block instead:
+
+```js
+const { getLocalIdentName } = require('css-loader-shorter-classnames');
+
+const getLocalIdent = getLocalIdentName();
+
+// Loader options
+{
+  // ...
+  loader: 'css-loader',
+  options: {
+    modules: true,
+    getLocalIdent: getLocalIdent,
+  },
+},
+```
+
 ## Enable only for production
 ```js
 const { getLocalIdentName } = require('css-loader-shorter-classnames');
