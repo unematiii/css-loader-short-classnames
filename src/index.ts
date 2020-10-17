@@ -15,16 +15,20 @@ const containsNumbers = (input: string) => /\d/.test(input);
 
 class Generator {
   protected counters: number[] = [];
+  protected hasSafeAlphabet = true;
 
   public constructor(protected readonly alphabet: string = classNamesAlphabet) {
     if (!alphabet.length) {
       throw new Error("Alphabet must contain at least one character!");
     }
 
-    if (this.nextNotNumber(0) === -1) {
-      throw new Error(
-        "Alphabet must contain at least one non-numeric character!"
-      );
+    if (containsNumbers(alphabet)) {
+      this.hasSafeAlphabet = false;
+      if (this.nextNotNumber(0) === -1) {
+        throw new Error(
+          "Alphabet must contain at least one non-numeric character!"
+        );
+      }
     }
   }
 
@@ -75,6 +79,9 @@ class Generator {
   }
 
   protected nextNotNumber(charIndex: number) {
+    if (this.hasSafeAlphabet) {
+      return charIndex;
+    }
     for (let k = charIndex; k < this.alphabet.length; k++) {
       if (!this.isNumber(k)) {
         return k;
