@@ -8,21 +8,24 @@ export type ClassNameGenerator = (
   localName: string
 ) => string;
 
-export const classNamesAlphabet =
+export const classNameAlphabet =
   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 const containsNumbers = (input: string) => /\d/.test(input);
 
-class Generator {
+export class Generator {
+  protected alphabet: string;
   protected counters: number[] = [];
   protected hasSafeAlphabet = true;
 
-  public constructor(protected readonly alphabet: string = classNamesAlphabet) {
+  public constructor(alphabet: string = classNameAlphabet) {
     if (!alphabet.length) {
       throw new Error("Alphabet must contain at least one character!");
     }
 
-    if (containsNumbers(alphabet)) {
+    this.alphabet = [...new Set(alphabet.split(""))].join("");
+
+    if (containsNumbers(this.alphabet)) {
       this.hasSafeAlphabet = false;
       if (this.nextNotNumber(0) === -1) {
         throw new Error(
@@ -92,7 +95,7 @@ class Generator {
 }
 
 const createGenerator = (
-  alphabet: string = classNamesAlphabet,
+  alphabet?: string,
   prefix?: string,
   suffix?: string
 ) => {
@@ -100,15 +103,15 @@ const createGenerator = (
 
   if (prefix || suffix) {
     const safePrefix =
-      !!prefix && !containsNumbers(prefix.charAt(0)) ? `_${prefix}` : prefix;
+      !!prefix && containsNumbers(prefix.charAt(0)) ? `_${prefix}` : prefix;
     return () => `${safePrefix || ""}${generator.next()}${suffix || ""}`;
   }
 
-  return generator.next;
+  return generator.next.bind(generator);
 };
 
 export const getLocalIdentName = (
-  alphabet: string = classNamesAlphabet,
+  alphabet?: string,
   prefix?: string,
   suffix?: string
 ): ClassNameGenerator => {

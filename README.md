@@ -1,11 +1,9 @@
-# css-loader-short-classnames
-
-# A short class name generator for css-loader with CSS Modules enabled.
+# A class name generator for css-loader with CSS Modules enabled.
 
 ## Description
-Save some extra bytes on your final bundle by shortening class names from something like `[local]-[hash:base64:8]` down to `a` ... `z` ... `A` ... `Z` ... `aA` ... `ZZ` etc.
+Save some extra bytes on your final bundle by shortening class names from something like `[local]-[hash:base64:8]` down to `a` ... `z` ... `A` ... `Z` ... `a0` ... `ZZ` etc.
 
-This package provides class name generator factory with default alphabet of `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`. Produced generator function always starts out with single letter character from the beginning of the alphabet and keeps increasing it while at the same time guaranteeing the uniqueness of the class names.
+This package provides class name generator factory with default alphabet of `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`. Produced generator function always starts out with single letter character from the beginning of the alphabet and keeps increasing it while at the same time guaranteeing the uniqueness of the class names.
 
 ## Install
 
@@ -74,25 +72,24 @@ const isProduction = process.env.NODE_ENV === 'production';
 ## Custom alphabet, prefix and suffix
 Optionally supply a custom alphabet and/or prefix and/or suffix.
 
-NB! Watch out for spaces and other invalid characters. If alphabet contains numbers, class names that would otherwise start with a number, will be automatically prefixed with `_` (eg `0` --> `_0`)). That is, unless you supply a prefix that doesn't start with a number yourself.
+NB! Watch out for spaces and other invalid characters. It is guaranteed that none of the generated strings start out with a number.
+
+If you supply a prefix that starts with a number, it will be automatically prefixed with `_`.
 
 ```js
-const { classNamesAlphabet, getLocalIdentName } = require('css-loader-shorter-classnames');
+const { classNameAlphabet, getLocalIdentName } = require('css-loader-shorter-classnames');
 
-// Produces: 'a', 'b', 'c', 'aa', 'ab', ... 'abcabca' etc.
+// Produces: 'a', 'b', 'c', 'aa', 'ba', ..., 'abcabca' etc.
 const getLocalIdent = getLocalIdentName('abc');
 
-// Produces: 'a', 'b', ..., '_0', '_1', ..., '_0a', ..., 'aa', 'a0', ... 'aZ' etc.
-const getLocalIdent = getLocalIdentName(classNamesAlphabet.concat('0123456789'));
+// Produces: '_a', '_b', ..., '_aZ' etc.
+const getLocalIdent = getLocalIdentName(classNameAlphabet, '_');
 
-// Produces: '_a', '_b', ... '_0', ... '_aZ' etc.
-const getLocalIdent = getLocalIdentName(classNamesAlphabet.concat('0123456789'), '_');
+// Produces: '_000a', '_000b', ..., '_000aZ' etc.
+const getLocalIdent = getLocalIdentName(classNameAlphabet, '000');
 
-// Produces: '_000a', '_000b', ... '_0000', ... '_000aZ' etc.
-const getLocalIdent = getLocalIdentName(classNamesAlphabet.concat('0123456789'), '000');
-
-// Produces: '_a_', '_b_', ... '_aZ_' etc.
-const getLocalIdent = getLocalIdentName(classNamesAlphabet, '_', '_');
+// Produces: '_a_', '_b_', ..., '_aZ_' etc.
+const getLocalIdent = getLocalIdentName(classNameAlphabet, '_', '_');
 ```
 
 ## Usage with Vue CLI generated projects

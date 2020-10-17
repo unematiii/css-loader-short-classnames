@@ -10,11 +10,21 @@
   ],
   "types": "index.d.ts",
   "scripts": {
-    "build": "npx tsc",
+    "build": "npx tsc --project tsconfig.prod.json",
     "build:clean": "run-s clean build",
     "clean": "rimraf index.js index.d.ts",
     "prepublishOnly": "run-s build:clean",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
+  },
+  "jest": {
+    "transform": {
+      ".ts": "ts-jest"
+    },
+    "testRegex": "(\\.(test|spec))\\.(ts|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ]
   },
   "repository": {
     "type": "git",
@@ -35,8 +45,10 @@
   "homepage": "https://github.com/unematiii/css-loader-short-classnames#readme",
   "dependencies": {},
   "devDependencies": {
+    "jest": "^26.5.3",
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",
+    "ts-jest": "^26.4.1",
     "typescript": "^4.0.3"
   }
 }
