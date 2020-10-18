@@ -75,7 +75,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 ## Custom alphabet, prefix and suffix
 Optionally supply a custom alphabet and/or prefix and/or suffix.
 
-NB! Watch out for spaces and other invalid characters. It is guaranteed that none of the generated strings start out with a number.
+NB! Watch out for spaces and other invalid characters. It is guaranteed that none of the generated class names start with a number.
 
 If you supply a prefix that starts with a number, it will be automatically prefixed with `_`.
 
