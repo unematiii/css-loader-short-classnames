@@ -29,7 +29,7 @@ const getLocalIdent = getLocalIdentName();
   loader: 'css-loader',
   options: {
     modules: {
-      getLocalIdent: getLocalIdent,
+      getLocalIdent,
     },
   },
 },
@@ -39,7 +39,6 @@ For `css-loader` versions below `3.*`, `modules` options should be specified in 
 
 ```js
 const { getLocalIdentName } = require('css-loader-shorter-classnames');
-
 const getLocalIdent = getLocalIdentName();
 
 // Loader options
@@ -48,7 +47,7 @@ const getLocalIdent = getLocalIdentName();
   loader: 'css-loader',
   options: {
     modules: true,
-    getLocalIdent: getLocalIdent,
+    getLocalIdent,
   },
 },
 ```
@@ -57,6 +56,7 @@ const getLocalIdent = getLocalIdentName();
 ```js
 const { getLocalIdentName } = require('css-loader-shorter-classnames');
 
+const getLocalIdent = getLocalIdentName();
 const isProduction = process.env.NODE_ENV === 'production';
 
 // Loader options
@@ -66,7 +66,7 @@ const isProduction = process.env.NODE_ENV === 'production';
   options: {
     modules: {
       localIdentName: '[local]-[hash:base64:8]',
-      ...(isProduction ? { getLocalIdent: getLocalIdentName() } : {}),
+      ...(isProduction ? { getLocalIdent } : {}),
     },
   },
 },
@@ -102,6 +102,7 @@ const getLocalIdent = getLocalIdentName(classNameAlphabet, '_', '_');
 ```js
 const { getLocalIdentName } = require('css-loader-shorter-classnames');
 
+const getLocalIdent = getLocalIdentName();
 const isProduction = process.env.NODE_ENV === 'production';
 
 module.exports = {
@@ -112,7 +113,7 @@ module.exports = {
       css: {
         modules: {
           localIdentName: '[local]-[hash:base64:8]',
-          ...(isProduction ? { getLocalIdent: getLocalIdentName() } : {}),
+          ...(isProduction ? { getLocalIdent } : {}),
         },
       },
     },
