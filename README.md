@@ -88,7 +88,7 @@ const getLocalIdent = getLocalIdentName('abc');
 // Produces: '_a', '_b', ..., '_aZ' etc.
 const getLocalIdent = getLocalIdentName(classNameAlphabet, '_');
 
-// Produces: '_000a', '_000b', ..., '_000aZ' etc.
+// Produces: '000a', '000b', ..., '000aZ' etc.
 const getLocalIdent = getLocalIdentName(classNameAlphabet, '000');
 
 // Produces: '_a_', '_b_', ..., '_aZ_' etc.
