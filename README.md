@@ -1,6 +1,5 @@
 # A class name generator for css-loader with CSS Modules enabled.
 
-[![Build Status](https://travis-ci.org/unematiii/css-loader-short-classnames.svg)](https://travis-ci.org/unematiii/css-loader-short-classnames)
 [![Coverage Status](https://coveralls.io/repos/github/unematiii/css-loader-short-classnames/badge.svg)](https://coveralls.io/github/unematiii/css-loader-short-classnames)
 
 ## Description
