@@ -8,6 +8,16 @@ export type ClassNameGenerator = (
   localName: string
 ) => string;
 
+export interface NativeCssContext {
+  /** Resource path relative to webpack's context. */
+  filename?: string;
+  /** The CSS module's original local identifier. */
+  local?: string;
+}
+
+/** Function form accepted by webpack's native CSS `localIdentName` option. */
+export type NativeCssLocalIdentName = (context: NativeCssContext) => string;
+
 export const classNameAlphabet =
   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
@@ -115,10 +125,10 @@ export const getLocalIdentName = (
   prefix?: string,
   suffix?: string
 ): ClassNameGenerator => {
-  const classes: Record<string, Record<string, string>> = {};
+  const classes: Record<string, Record<string, string>> = Object.create(null);
   const classNameGenerator = createGenerator(alphabet, prefix, suffix);
   const getClassName = (path: string, localName: string): string => {
-    classes[path] ||= {};
+    classes[path] ||= Object.create(null);
     classes[path][localName] ||= classNameGenerator();
     return classes[path][localName];
   };
@@ -128,4 +138,27 @@ export const getLocalIdentName = (
     _: string,
     localName: string
   ) => getClassName(resourcePath, localName);
+};
+
+/**
+ * Creates the function form of webpack's native CSS `localIdentName` option.
+ * Native CSS passes webpack path data containing `filename` and `local`.
+ */
+export const getNativeCssLocalIdentName = (
+  alphabet?: string,
+  prefix?: string,
+  suffix?: string
+): NativeCssLocalIdentName => {
+  const classes: Record<string, Record<string, string>> = Object.create(null);
+  const classNameGenerator = createGenerator(alphabet, prefix, suffix);
+  return ({ filename, local }) => {
+    if (typeof filename !== "string" || typeof local !== "string") {
+      throw new Error(
+        "Webpack native CSS localIdentName requires filename and local path data."
+      );
+    }
+    classes[filename] ||= Object.create(null);
+    classes[filename][local] ||= classNameGenerator();
+    return classes[filename][local];
+  };
 };

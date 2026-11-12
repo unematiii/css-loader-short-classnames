@@ -7,11 +7,13 @@ npm-debug.log*
 node_modules/
 
 # Build files
-index.js
-index.d.ts
+dist/
 
 # Coverage
 coverage/
+
+# Webpack integration fixture output
+test/fixtures/css-modules/.output/
 
 # Misc
 .DS_Store

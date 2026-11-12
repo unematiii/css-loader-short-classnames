@@ -1,123 +1,83 @@
-# A class name generator for css-loader with CSS Modules enabled.
+# css-loader-shorter-classnames
 
-[![Coverage Status](https://coveralls.io/repos/github/unematiii/css-loader-short-classnames/badge.svg)](https://coveralls.io/github/unematiii/css-loader-short-classnames)
+[![CI](https://github.com/unematiii/css-loader-short-classnames/actions/workflows/test.yml/badge.svg)](https://github.com/unematiii/css-loader-short-classnames/actions/workflows/test.yml)
+[![View on npm](https://img.shields.io/npm/v/css-loader-shorter-classnames)](https://www.npmjs.com/package/css-loader-shorter-classnames)
+[![Weekly npm downloads](https://badgen.net/npm/dw/css-loader-shorter-classnames)](https://www.npmjs.com/package/css-loader-shorter-classnames)
+[![GitHub license](https://img.shields.io/github/license/unematiii/css-loader-short-classnames)](https://github.com/unematiii/css-loader-short-classnames/blob/main/LICENSE)
 
-## Description
-Save some extra bytes on your final bundle by shortening class names from something like `[local]-[hash:base64:8]` down to `a` ... `z` ... `A` ... `Z` ... `a0` ... `ZZ` etc.
-
-This package provides class name generator factory with default alphabet of `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`. Produced generator function always starts out with single letter character from the beginning of the alphabet and keeps increasing it while at the same time guaranteeing the uniqueness of the class names.
+Generate short, unique CSS Module class names for webpack projects using either `css-loader` or webpack's native CSS support.
 
 ## Install
 
-```
-npm i css-loader-shorter-classnames -D
+```sh
+npm install --save-dev css-loader-shorter-classnames
 ```
 
-## Basic usage
+## With `css-loader`
+
+`getLocalIdentName()` returns the `getLocalIdent` callback expected by `css-loader`. Existing users can continue using this API.
 
 ```js
-// Import class name generator factory
-const { getLocalIdentName } = require('css-loader-shorter-classnames');
-
-// Create generator
-const getLocalIdent = getLocalIdentName();
-
-// Supply created function as a loader options argument
-{
-  // ...
-  loader: 'css-loader',
-  options: {
-    modules: {
-      getLocalIdent,
-    },
-  },
-},
-```
-
-For `css-loader` versions below `3.*`, `modules` options should be specified in loader `options` block instead:
-
-```js
-const { getLocalIdentName } = require('css-loader-shorter-classnames');
-const getLocalIdent = getLocalIdentName();
-
-// Loader options
-{
-  // ...
-  loader: 'css-loader',
-  options: {
-    modules: true,
-    getLocalIdent,
-  },
-},
-```
-
-## Enable only for production
-```js
-const { getLocalIdentName } = require('css-loader-shorter-classnames');
-
-const getLocalIdent = getLocalIdentName();
-const isProduction = process.env.NODE_ENV === 'production';
-
-// Loader options
-{
-  // ...
-  loader: 'css-loader',
-  options: {
-    modules: {
-      localIdentName: '[local]-[hash:base64:8]',
-      ...(isProduction ? { getLocalIdent } : {}),
-    },
-  },
-},
-```
-
-## Custom alphabet, prefix and suffix
-Optionally supply a custom alphabet and/or prefix and/or suffix.
-
-NB! Watch out for spaces and other invalid characters. It is guaranteed that none of the generated class names start with a number.
-
-If you supply a prefix that starts with a number, it will be automatically prefixed with `_`.
-
-```js
-const { classNameAlphabet, getLocalIdentName } = require('css-loader-shorter-classnames');
-
-// Produces: 'a', 'b', 'c', 'aa', 'ba', ..., 'abcabca' etc.
-const getLocalIdent = getLocalIdentName('abc');
-
-// Produces: '_a', '_b', ..., '_aZ' etc.
-const getLocalIdent = getLocalIdentName(classNameAlphabet, '_');
-
-// Produces: '_000a', '_000b', ..., '_000aZ' etc.
-const getLocalIdent = getLocalIdentName(classNameAlphabet, '000');
-
-// Produces: '_a_', '_b_', ..., '_aZ_' etc.
-const getLocalIdent = getLocalIdentName(classNameAlphabet, '_', '_');
-```
-
-## Usage with Vue CLI generated projects
-
-`vue.config.js`:
-
-```js
-const { getLocalIdentName } = require('css-loader-shorter-classnames');
-
-const getLocalIdent = getLocalIdentName();
-const isProduction = process.env.NODE_ENV === 'production';
+const { getLocalIdentName } = require("css-loader-shorter-classnames");
 
 module.exports = {
-  // ...
-  css: {
-    // ...
-    loaderOptions: {
-      css: {
-        modules: {
-          localIdentName: '[local]-[hash:base64:8]',
-          ...(isProduction ? { getLocalIdent } : {}),
-        },
-      },
-    },
-    // ...
+  module: {
+    rules: [{
+      test: /\.module\.css$/i,
+      use: [{
+        loader: "css-loader",
+        options: { modules: { getLocalIdent: getLocalIdentName() } },
+      }],
+    }],
   },
-  // ...
 };
 ```
+
+## With webpack native CSS
+
+Webpack's native CSS generator supports a `localIdentName` template function. The callback receives path data with `filename` and `local` values. Use `getNativeCssLocalIdentName()` there. Native CSS requires webpack 5.109 or later; see the [webpack native CSS guide](https://webpack.js.org/guides/native-css/).
+
+```js
+const { getNativeCssLocalIdentName } = require("css-loader-shorter-classnames");
+
+module.exports = {
+  experiments: { css: true },
+  module: {
+    generator: {
+      "css/auto": {
+        localIdentName: getNativeCssLocalIdentName(),
+      },
+    },
+  },
+};
+```
+
+Use `*.module.css` files with the `css/auto` type (webpack's default auto CSS handling) or configure a rule with `type: "css/module"` and its `generator.localIdentName` for a narrower scope.
+
+## Options
+
+Both factories accept an optional alphabet, prefix, and suffix:
+
+```js
+const { classNameAlphabet, getLocalIdentName } = require("css-loader-shorter-classnames");
+
+const getLocalIdent = getLocalIdentName("abc", "_", "_");
+// Names: _a_, _b_, _c_, _aa_, ...
+```
+
+The default alphabet is `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`. Names begin with a non-numeric character. If a prefix starts with a digit, `_` is prepended automatically. Avoid whitespace and characters invalid in CSS identifiers.
+
+Names are allocated in encounter order within each resource path, and repeated requests for the same local name return the same value. For server rendering or builds that must produce identical names across separate compilations, use identical module visitation order and configuration. The default allocation is not a content hash.
+
+## Development
+
+```sh
+npm ci
+npm run lint
+npm test
+npm run typecheck
+npm run build
+npm run verify:integrations
+```
+
+The callback contract tests are in `src/index.spec.ts`. `npm run typecheck` also builds the package and checks consumer imports from the package root against webpack's `Configuration` type and the documented `css-loader` callback signature. Run `npm run verify:integrations` to build the tiny webpack fixtures in `test/fixtures/css-modules` and verify both emitted selectors/declarations and JavaScript class exports.

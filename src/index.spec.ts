@@ -1,4 +1,9 @@
-import { classNameAlphabet, Generator, getLocalIdentName } from "./index";
+import {
+  classNameAlphabet,
+  Generator,
+  getLocalIdentName,
+  getNativeCssLocalIdentName,
+} from "./index";
 
 const combinationsCount = (alphabet: string, length: number) =>
   Array.apply(null, Array(length)).reduce<number>(
@@ -238,6 +243,13 @@ describe("css-loader-short-classnames", () => {
       ).toBe("bbbaa");
     });
 
+    it("handles valid class names that are built-in object property names", () => {
+      const getLocalIdent = getLocalIdentName();
+
+      expect(getLocalIdent({ resourcePath: resourcePathA }, "", "constructor")).toBe("a");
+      expect(getLocalIdent({ resourcePath: resourcePathA }, "", "__proto__")).toBe("b");
+    });
+
     it("creates generator with custom alphabet and numeric prefix and produces prefixed class names", () => {
       const getLocalIdent = getLocalIdentName("abc", "0a");
 
@@ -290,6 +302,32 @@ describe("css-loader-short-classnames", () => {
       expect(
         getLocalIdent({ resourcePath: resourcePathB }, "", "class-b")
       ).toBe("aa0");
+    });
+  });
+
+  describe("getNativeCssLocalIdentName", () => {
+    it("returns stable, unique short names per resource and local name", () => {
+      const getName = getNativeCssLocalIdentName("abc");
+      const first = { filename: "src/a.module.css", local: "root" };
+      const second = { filename: "src/b.module.css", local: "root" };
+
+      expect(getName(first)).toBe("a");
+      expect(getName(first)).toBe("a");
+      expect(getName(second)).toBe("b");
+      expect(getName({ ...first, local: "title" })).toBe("c");
+    });
+
+    it("supports prefix and suffix options", () => {
+      const getName = getNativeCssLocalIdentName("abc", "_", "_");
+
+      expect(getName({ filename: "a.css", local: "root" })).toBe("_a_");
+    });
+
+    it("handles valid local names that are built-in object property names", () => {
+      const getName = getNativeCssLocalIdentName();
+
+      expect(getName({ filename: "a.css", local: "constructor" })).toBe("a");
+      expect(getName({ filename: "a.css", local: "__proto__" })).toBe("b");
     });
   });
 });

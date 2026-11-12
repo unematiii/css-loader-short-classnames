@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es5",                          /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
-    "module": "commonjs",                     /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */
+    "target": "es2015",                       /* Node 10 supports ES2015 output. */
+    "module": "Node16",                       /* Package does not declare ESM, so Node16 emits CommonJS. */
     "allowJs": true,                          /* Allow javascript files to be compiled. */
     "checkJs": true,                          /* Report errors in .js files. */
     "declaration": true,                      /* Generates corresponding '.d.ts' file. */
-    "outDir": ".",                            /* Redirect output structure to the directory. */
+    "rootDir": "./src",                       /* Keep source and declaration output rooted at src. */
+    "outDir": "./dist",                       /* Keep generated package files together. */
     "removeComments": true,                   /* Do not emit comments to output. */
-    "downlevelIteration": true,               /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */
 
     /* Strict Type-Checking Options */
     "strict": true,                           /* Enable all strict type-checking options. */
@@ -15,14 +15,15 @@
     "strictNullChecks": true,                 /* Enable strict null checks. */
     "noImplicitThis": true,                   /* Raise error on 'this' expressions with an implied 'any' type. */
     "alwaysStrict": true,                     /* Parse in strict mode and emit "use strict" for each source file. */
+    "isolatedModules": true,                  /* Required by ts-jest with Node16 module semantics. */
 
     /* Additional Checks */
     "noUnusedLocals": true,                   /* Report errors on unused locals. */
     "noUnusedParameters": true,               /* Report errors on unused parameters. */
 
     /* Module Resolution Options */
-    "baseUrl": ".",
-    "moduleResolution": "node",               /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
+    "moduleResolution": "Node16",             /* Use current Node.js package resolution rules. */
+    "types": ["jest", "node"],                /* Include Jest globals and Node.js declarations in test files. */
     "allowSyntheticDefaultImports": true,     /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
     "esModuleInterop": true,                  /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
 

@@ -1,19 +1,22 @@
 {
   "name": "css-loader-shorter-classnames",
-  "version": "2.0.1",
-  "description": "Provides short class name generator for css-loader with CSS Modules enabled",
-  "main": "index.js",
+  "version": "2.1.0",
+  "description": "Short CSS Module class name generators for css-loader and webpack native CSS",
+  "main": "dist/index.js",
   "files": [
     "README.md",
-    "index.js",
-    "index.d.ts"
+    "dist/index.js",
+    "dist/index.d.ts"
   ],
-  "types": "index.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "npx tsc --project tsconfig.prod.json",
     "build:clean": "run-s clean build",
-    "clean": "rimraf index.js index.d.ts",
+    "clean": "rimraf dist",
     "prepublishOnly": "run-s build:clean",
+    "lint": "eslint src test/verify-integrations.js test/types/integrations.ts",
+    "typecheck": "tsc --project tsconfig.json --noEmit && npm run build && tsc --project tsconfig.types.json",
+    "verify:integrations": "npm run build && node test/verify-integrations.js",
     "test": "jest"
   },
   "jest": {
@@ -37,6 +40,8 @@
     "css",
     "css-loader",
     "css-modules",
+    "webpack",
+    "native-css",
     "mini-css-extract-plugin",
     "vue-cli"
   ],
@@ -46,13 +51,18 @@
     "url": "https://github.com/unematiii/css-loader-short-classnames/issues"
   },
   "homepage": "https://github.com/unematiii/css-loader-short-classnames#readme",
-  "dependencies": {},
   "devDependencies": {
-    "@types/jest": "^29.2.4",
-    "jest": "^29.3.1",
+    "@eslint/js": "^10.0.1",
+    "@types/jest": "^29.5.14",
+    "@typescript-eslint/eslint-plugin": "^8.72.2",
+    "@typescript-eslint/parser": "^8.72.2",
+    "css-loader": "^7.1.5",
+    "eslint": "^10.14.0",
+    "jest": "^29.7.0",
     "npm-run-all": "^4.1.5",
-    "rimraf": "^3.0.2",
-    "ts-jest": "^29.0.3",
-    "typescript": "^4.9.4"
+    "rimraf": "^6.1.4",
+    "ts-jest": "^29.4.15",
+    "typescript": "^5.9.3",
+    "webpack": "^5.112.2"
   }
 }
